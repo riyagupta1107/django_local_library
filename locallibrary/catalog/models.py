@@ -59,6 +59,12 @@ class Book(models.Model):
         Genre,
         help_text = "Select a genre for the book"
     )
+    def display_genre(self):
+        """Create a string for the Genre. This is required to display genre in Admin."""
+        return ', '.join(genre.name for genre in self.genre.all()[:3])
+
+    display_genre.short_description = 'Genre'
+
 
     def __str__(self):
         """String for representing model object"""
@@ -67,6 +73,7 @@ class Book(models.Model):
     def get_absolute_url(self):
         """Returns the url to access a detail record for this book"""
         return reverse('book-detail', args = [str(self.id)])
+    
     
 class BookInstance(models.Model):
     """Model representing a specific copy of book (i.e. that can be borrowed from library)"""
@@ -144,7 +151,7 @@ class Language(models.Model):
         constraints = [
             UniqueConstraint(
                 Lower('name'),
-                lang = 'language_name_case_insensitive_unique',
+                name = 'language_name_case_insensitive_unique',
                 violation_error_message = "Language already exists"
             ),
         ]
